@@ -1,5 +1,8 @@
 package slak;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,8 +10,13 @@ import static slak.Token.*;
 
 public class Main {
 	public static void main(String[] args) {
-		String s = "read x write x";
-		System.out.println(parsePseudocode(s));
+		try {
+			FileWriter fw = new FileWriter(new File(System.getProperty("user.dir"))+"/out.txt");
+			fw.write(parsePseudocode(args[0]));
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
