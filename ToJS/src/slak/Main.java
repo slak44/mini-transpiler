@@ -1,6 +1,8 @@
 package slak;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,12 +12,29 @@ import static slak.Token.*;
 
 public class Main {
 	public static void main(String[] args) {
-		try {
-			FileWriter fw = new FileWriter(new File(System.getProperty("user.dir"))+"/out.txt");
-			fw.write(parsePseudocode(args[0]));
-			fw.close();
+		parseFromFile(args[0], args[1]);
+	}
+	
+	/**
+	 * Gets the pseudocode from a file and outputs the JavaScript to another.
+	 * If one of the files is not specified it will default to the current directory.
+	 * @param in the input file
+	 * @param out the output file
+	 * @return whether the operation succedded
+	 */
+	public static boolean parseFromFile(String in, String out) {
+		if (in == null) in = System.getProperty("user.dir")+"/in.txt";
+		if (out == null) out = System.getProperty("user.dir")+"/out.txt";
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(in)));
+				FileWriter fw = new FileWriter(new File(out))) {
+			StringBuilder input = new StringBuilder();
+			String tmp;
+			while ((tmp = br.readLine()) != null) input.append(tmp+"\n");
+			fw.write(parsePseudocode(input.toString()));
+			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 	
