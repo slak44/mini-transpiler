@@ -21,7 +21,7 @@ Changeable Token values are in italics.
 </pre>
 <h3>Variable declarations</h3>
 Variables can be declared by using a new name before the assignment operator   
-<pre>x = 10</pre>  
+<pre>x <i>=</i> 10</pre>  
 or by using the new name after an input token  
 <pre><i>read</i> x</pre>
 <h3>Assignment</h3>
@@ -31,18 +31,18 @@ Valid:
 &nbsp;&nbsp;&nbsp;&nbsp;n = 19
 <i>}</i>
 </pre>
-<pre><i>if true {</i> n = 19
+<pre><i>if true {</i> n <i>=</i> 19
 <i>}</i>
 </pre>
 <pre><i>if true {</i>  
   
-n = 19
+n <i>=</i> 19
   
 <i>}</i>
 </pre>  
 Invalid:  
-<pre><i>if true {</i>n = 19<i>}</i></pre>
-<pre><i>if true {</i>n = 19      <i>}</i></pre>
+<pre><i>if true {</i>n <i>=</i> 19<i>}</i></pre>
+<pre><i>if true {</i>n <i>=</i> 19      <i>}</i></pre>
 <h3>Condition expressions</h3>  
 They can resolve to boolean, numeric or even string values. JavaScript accepts all of them.  
 
@@ -56,6 +56,6 @@ JS falsy values:
 
 JS truey values:  
 - `true`
-- `1` (any non-0 number)
+- `1` (any non-`0` number)
 - `" "` `' '` (any non-empty string)
-  - Note: `"0"` is true, and so are `"false"`, `"null"`, `"undefined"`
+  - Note: `"0"` is `true`, and so are `"false"`, `"null"`, `"undefined"`
