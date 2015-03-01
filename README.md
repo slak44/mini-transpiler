@@ -3,10 +3,11 @@
 The language can be customized by modifying the Token enum values.  
 <h2>Constructs</h2>
 Changeable Token values are in italics.
-<h3>Input</h3>		
-<pre><i>read</i> x</pre>  
-<h3>Output</h3>
-<pre><i>write</i> x</pre>  
+<h3>Input/Output</h3>		
+<pre>
+<i>read</i> x
+<i>write</i> x
+</pre>  
 <h3>Conditional</h3>		
 <pre>
 <i>if</i> condition <i>{</i>  
