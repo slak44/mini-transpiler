@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class Main {
@@ -19,6 +20,9 @@ public class Main {
 		JTextArea input = new JTextArea("<Input code here>");
 		JTextArea tokenSpecs = new JTextArea("<Token list here>");
 		JTextArea output = new JTextArea("<Output here>");
+		JScrollPane iJsp = new JScrollPane(input);
+		JScrollPane tJsp = new JScrollPane(tokenSpecs);
+		JScrollPane oJsp = new JScrollPane(output);
 		
 		input.setTabSize(2);
 		tokenSpecs.setTabSize(2);
@@ -46,15 +50,15 @@ public class Main {
 			}
 		});
 		
-		input.setBounds(0, 0, 300, 600);
-		tokenSpecs.setBounds(305, 0, 300, 600);
-		output.setBounds(610, 0, 300, 600);
+		iJsp.setBounds(0, 0, 300, 600);
+		tJsp.setBounds(305, 0, 300, 600);
+		oJsp.setBounds(610, 0, 300, 600);
 		run.setBounds(0, 600, 915, 75);
 
 		f.setLayout(null);
-		f.add(input);
-		f.add(tokenSpecs);
-		f.add(output);
+		f.add(iJsp);
+		f.add(tJsp);
+		f.add(oJsp);
 		f.add(run);
 		
 		f.setSize(915, 700);
