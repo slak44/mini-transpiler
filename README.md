@@ -66,3 +66,7 @@ Tokens are specified with the following syntax:
 <pre><i>ENUM_NAME</i> @ <i>ENUM_VALUE</i></pre>
 Each token has to be on its own line.
 Note that `STRING`, `NUMBER`, `VARIABLE_NAME` and `LINE` do not use the specified values, as such anything will work.
+  
+<h2>UI</h2>
+The first text area should contain the pseudocode. The second area should contain the custom tokens. Leaving it empty will use the defaults from Token. The third one will contain the outputed JavaScript.  
+In order to use file paths instead of direct code, append `file:///` before the input, output, and Token config file names. The input and output should be in the first area on 2 lines, and the Token config in the second.
