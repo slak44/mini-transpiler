@@ -46,6 +46,16 @@ public class Parser {
 	}
 	
 	/**
+	 * Creates JavaScript from given data and stores it in {@link #output}.
+	 * @param rawInput the pseudocode
+	 * @param rawTokenList the token list
+	 */
+	public Parser(String rawInput, String rawTokenList) {
+		input = rawInput;
+		tokenList = rawTokenList;
+	}
+	
+	/**
 	 * Gets the data from a file as a string.
 	 * @param path the file path
 	 * @return the string
@@ -60,10 +70,10 @@ public class Parser {
 	}
 	
 	/**
-	 * Makes the operations required to transform the input pseudocode to JavaScript.
+	 * Makes the operations required to transform the input pseudocode to JavaScript using the stored data.
 	 * @return the JavaScript code
 	 */
-	private void parsePseudocode() {
+	public void parsePseudocode() {
 		putTokens();
 		setTokenLength();
 		tokenize();
@@ -71,7 +81,7 @@ public class Parser {
 	}
 	
 	/**
-	 * Set all 1-char tokens their isOneChar field to true, and the multi-char tokens to false.
+	 * Set all 1-char tokens isOneChar field to true, and the multi-char tokens to false.
 	 */
 	private void setTokenLength() {
 		for (Token ts : Token.values()) {
@@ -93,9 +103,17 @@ public class Parser {
 	}
 	
 	/**
+	 * Outputs and throws the exception.
+	 * @param ex the exception
+	 */
+	private void outputAndThrow(RuntimeException ex) {
+		output += "\n" + ex.getMessage();
+		System.out.println(output);
+		throw ex;
+	}
+	
+	/**
 	 * Transforms tokens with metadata in valid JavaScript.
-	 * @param tokens the token list
-	 * @param metadata the metadata list
 	 * @return the JS code
 	 */
 	private void dataToJS() {
@@ -103,8 +121,8 @@ public class Parser {
 		for (int i = 0; i < tokens.size(); i++) {
 			switch (tokens.get(i)) {
 			case INPUT:
-				if (tokens.get(i+1) != VARIABLE_NAME) throw new RuntimeException("Error: Expected variable identifier.\n");
-				if (isReferenced(metadata.get(i+1))) throw new RuntimeException("Error: Cannot read an already created variable.\n");
+				if (tokens.get(i+1) != VARIABLE_NAME) outputAndThrow(new RuntimeException("Error: Expected variable identifier.\n"));
+				if (isReferenced(metadata.get(i+1))) outputAndThrow(new RuntimeException("Error: Cannot read an already created variable.\n"));
 				else {
 					code.append("var "+metadata.get(i+1)+" = prompt();\n");
 					varReferences.add(metadata.get(i+1));
@@ -125,7 +143,7 @@ public class Parser {
 						code.append(");\n");
 						if (i+1 >= tokens.size()) break;
 					}
-				} else throw new RuntimeException("Error: Can only output variables, constants or expressions.\n");
+				} else outputAndThrow(new RuntimeException("Error: Can only output variables, constants or expressions.\n"));
 				i--;
 				break;
 			case VARIABLE_NAME:
@@ -139,7 +157,7 @@ public class Parser {
 					i+=2;
 					i = appendUntil(LINE, code, i);
 					code.append(";\n");
-				} else throw new RuntimeException("Error: Expected assignment.\n");
+				} else outputAndThrow(new RuntimeException("Error: Expected assignment.\n"));
 				break;
 			case IF:
 				code.append("if (");
@@ -176,7 +194,7 @@ public class Parser {
 			if (tokens.get(i) == STRING || tokens.get(i) == NUMBER) code.append(metadata.get(i));
 			else if (tokens.get(i) == VARIABLE_NAME) {
 				if (isReferenced(metadata.get(i))) code.append(metadata.get(i));
-				else throw new RuntimeException("Error: Variable undefined.\n");
+				else outputAndThrow(new RuntimeException("Error: Variable undefined.\n"));
 			}
 			else if (tokens.get(i) == PLUS) code.append("+");
 			else if (tokens.get(i) == MINUS) code.append("-");
@@ -263,9 +281,10 @@ public class Parser {
 					i++;
 					if (i >= input.length()) break;
 				}
+				string.insert(0, "\"");
+				string.append("\"");
 				tokens.add(STRING);
 				metadata.put(tokens.size()-1, string.toString());
-				i--;
 				continue charLoop;
 			}
 			
