@@ -64,4 +64,5 @@ JS truey values:
 <h2>Token configs</h2>
 Tokens are specified with the following syntax:  
 <pre><i>ENUM_NAME</i> @ <i>ENUM_VALUE</i></pre>
-Note that STRING, NUMBER, VARIABLE_NAME and LINE do not use the specified values, as such anything will work.
+Each token has to be on its own line.
+Note that `STRING`, `NUMBER`, `VARIABLE_NAME` and `LINE` do not use the specified values, as such anything will work.
