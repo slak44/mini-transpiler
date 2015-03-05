@@ -121,15 +121,23 @@ public class Parser {
 		for (int i = 0; i < tokens.size(); i++) {
 			switch (tokens.get(i)) {
 			case INPUT:
-				if (tokens.get(i+1) != VARIABLE_NAME) outputAndThrow(new RuntimeException("Error: Expected variable identifier.\n"));
-				if (isReferenced(metadata.get(i+1))) {
-					code.append(metadata.get(i+1)+" = prompt();\n");
-					i++;
-				} else {
-					code.append("var "+metadata.get(i+1)+" = prompt();\n");
-					varReferences.add(metadata.get(i+1));
-					i++;
+				boolean hasRead = false;
+				while (tokens.get(i+1) == VARIABLE_NAME || tokens.get(i+1) == COMMA) {
+					hasRead = true;
+					if (tokens.get(i+1) == COMMA) {
+						i++;
+						continue;
+					}
+					if (isReferenced(metadata.get(i+1))) {
+						code.append(metadata.get(i+1)+" = prompt();\n");
+						i++;
+					} else {
+						code.append("var "+metadata.get(i+1)+" = prompt();\n");
+						varReferences.add(metadata.get(i+1));
+						i++;
+					}
 				}
+				if (!hasRead) outputAndThrow(new RuntimeException("Error: Expected variable identifier.\n"));
 				break;
 			case OUTPUT:
 				i++;
