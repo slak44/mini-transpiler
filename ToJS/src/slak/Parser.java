@@ -122,8 +122,10 @@ public class Parser {
 			switch (tokens.get(i)) {
 			case INPUT:
 				if (tokens.get(i+1) != VARIABLE_NAME) outputAndThrow(new RuntimeException("Error: Expected variable identifier.\n"));
-				if (isReferenced(metadata.get(i+1))) outputAndThrow(new RuntimeException("Error: Cannot read an already created variable.\n"));
-				else {
+				if (isReferenced(metadata.get(i+1))) {
+					code.append(metadata.get(i+1)+" = prompt();\n");
+					i++;
+				} else {
 					code.append("var "+metadata.get(i+1)+" = prompt();\n");
 					varReferences.add(metadata.get(i+1));
 					i++;
