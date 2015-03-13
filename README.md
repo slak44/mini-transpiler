@@ -15,10 +15,17 @@ Changeable Token values are in italics.
 <i>}</i>
 </pre>
 <h3>Iterative</h3>	
+<h4>While loop</h4>   
 <pre>
 <i>while</i> condition <i>{</i>   
 &nbsp;&nbsp;&nbsp;&nbsp;code     
 <i>}</i> 
+</pre>
+<h4>Do..while loop</h4>   
+<pre>
+<i>do</i>  
+  code
+<i>while</i> condition
 </pre>
 <h3>Variable declarations</h3>
 Variables can be declared by using a new name before the assignment operator   
