@@ -178,6 +178,15 @@ public class Parser {
 			case ELSE:
 				code.append("} else {\n");
 				break;
+			case DO:
+				code.append("do {\n");
+				break;
+			case UNTIL:
+				code.append("} while (!(");
+				i++;
+				i = appendUntil(LINE, code, i);
+				code.append("));");
+				break;
 			case WHILE:
 				code.append("while (");
 				i++;
