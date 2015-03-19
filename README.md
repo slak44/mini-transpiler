@@ -27,7 +27,7 @@ Changeable Token values are in italics.
   code
 <i>while</i> condition
 </pre>  
-NOTE: The condition is evaluated, inverted, then checked for true.
+In do..while: The condition is evaluated, inverted, then checked for true.
 <h3>Variable declarations</h3>
 Variables can be declared by using a new name before the assignment operator   
 <pre>x <i>=</i> 10</pre>  
