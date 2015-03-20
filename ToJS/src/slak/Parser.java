@@ -129,10 +129,10 @@ public class Parser {
 						continue;
 					}
 					if (isReferenced(metadata.get(i+1))) {
-						code.append(metadata.get(i+1)+" = prompt();\n");
+						code.append(metadata.get(i+1)+" = Number.parseInt(prompt());\n");
 						i++;
 					} else {
-						code.append("var "+metadata.get(i+1)+" = prompt();\n");
+						code.append("var "+metadata.get(i+1)+" = Number.parseInt(prompt());\n");
 						varReferences.add(metadata.get(i+1));
 						i++;
 					}
