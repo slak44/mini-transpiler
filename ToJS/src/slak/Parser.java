@@ -129,10 +129,10 @@ public class Parser {
 						continue;
 					}
 					if (isReferenced(metadata.get(i+1))) {
-						code.append(metadata.get(i+1)+" = prompt();\n");
+						code.append(metadata.get(i+1)+" = Number.parseInt(prompt());\n");
 						i++;
 					} else {
-						code.append("var "+metadata.get(i+1)+" = prompt();\n");
+						code.append("var "+metadata.get(i+1)+" = Number.parseInt(prompt());\n");
 						varReferences.add(metadata.get(i+1));
 						i++;
 					}
@@ -194,11 +194,8 @@ public class Parser {
 				StringBuilder perItOp = new StringBuilder();
 				i = appendUntil(perItOp, i, EXECUTE);
 				int num;
-				try {
-					num = Integer.parseInt(perItOp.toString());
-				} catch (NumberFormatException e) {
-					num = -1;
-				}
+				try {num = Integer.parseInt(perItOp.toString());}
+				catch (NumberFormatException e) {num = -1;}
 				if (num >= 0) code.append(" <= " + tmp.toString() + "; " + itName + "++");
 				else code.append(" > " + tmp.toString() + "; " + itName + "--");
 				code.append(") {\n");
