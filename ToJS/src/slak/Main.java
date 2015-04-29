@@ -13,7 +13,7 @@ public class Main {
 	public static void main(String[] args) {
 		JFrame f = new JFrame();
 		f.setTitle("ToJS");
-	    f.setLocation(300,100);
+	    f.setLocation(300, 100);
 	    f.setResizable(false);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -41,9 +41,9 @@ public class Main {
 				if (input.getText().startsWith("file:///") && tokenSpecs.getText().startsWith("file:///")) {
 					String[] files = input.getText().split("\n");
 					Parser p = new Parser(files[0].substring(8), files[1].substring(8), tokenSpecs.getText().substring(8));
-					output.setText(p.getOutput()+"\nOutputed to file:\n"+files[1].substring(8));
+					output.setText(p.getOutput() + "\nOutputed to file:\n" + files[1].substring(8));
 				} else {
-					Parser p = new Parser(input.getText()+"\n", tokenSpecs.getText());
+					Parser p = new Parser(input.getText() + "\n", tokenSpecs.getText());
 					try {p.parsePseudocode();}
 					finally {output.setText(p.getOutput());}
 				}

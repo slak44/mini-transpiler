@@ -4,7 +4,7 @@ public enum Token {
 	INPUT("read"), OUTPUT("write"),
 	ASSIGNMENT(true, false, "="),
 	TRUE(false, true, "true"), FALSE(false, true, "false"), AND(false, true, "&&"), OR(false, true, "||"), NOT(false, true, "!"),
-	IF("if"), ELSE("else"), WHILE("while"), UNTIL("until"),
+	IF("if"), ELSE("else"), WHILE("while"), UNTIL("until"), FOR("for"),
 	DO(true, false, "do"), THEN("{"), EXECUTE("{"), END(true, true, "}"),
 	PLUS(true, true, "+"), MINUS(true, true, "-"), MULTIPLY(true, true, "*"), DIVIDE(true, true, "/"), REMAINDER(true, true, "%"),
 	MORE_EQUALS(false, true, ">="), LESS_EQUALS(false, true, "<="), EQUALS(false, true, "=="), NOT_EQUALS(false, true, "!="), MORE_THAN(true, true, ">"), LESS_THAN(true, true, "<"), 

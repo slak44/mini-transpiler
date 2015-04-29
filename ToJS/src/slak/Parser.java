@@ -149,9 +149,9 @@ public class Parser {
 							continue;
 						}
 						code.append("alert(");
-						i = appendUntil(COMMA, code, i);
+						i = appendUntil(code, i, COMMA);
 						code.append(");\n");
-						if (i+1 >= tokens.size()) break;
+						if (i >= tokens.size()) break;
 					}
 				} else outputAndThrow(new RuntimeException("Error: Can only output variables, constants or expressions.\n"));
 				i--;
@@ -164,19 +164,39 @@ public class Parser {
 						varReferences.add(metadata.get(i));
 					}
 					code.append(metadata.get(i)+" = ");
-					i+=2;
-					i = appendUntil(LINE, code, i);
+					i += 2;
+					i = appendUntil(code, i, LINE);
 					code.append(";\n");
 				} else outputAndThrow(new RuntimeException("Error: Expected assignment.\n"));
 				break;
 			case IF:
 				code.append("if (");
 				i++;
-				i = appendUntil(THEN, code, i);
+				i = appendUntil(code, i, THEN);
 				code.append(") {\n");
 				break;
 			case ELSE:
 				code.append("} else {\n");
+				break;
+			case FOR:
+				code.append("for (");
+				if (tokens.get(i+1) != VARIABLE_NAME && tokens.get(i+2) != ASSIGNMENT) outputAndThrow(new RuntimeException("Error: Expected iterator declartion.\n"));
+				String itName = metadata.get(i+1);
+				if (!varReferences.contains(itName)) varReferences.add(itName);
+				code.append("var " + itName + " = ");
+				i += 3;
+				i = appendUntil(code, i, COMMA);
+				i++;
+				code.append("; " + itName);
+				StringBuilder tmp = new StringBuilder();
+				i = appendUntil(tmp, i, COMMA);
+				i++;
+				StringBuilder perItOp = new StringBuilder();
+				i = appendUntil(perItOp, i, EXECUTE);
+				int num = Integer.parseInt(perItOp.toString());
+				if (num >= 0) code.append(" <= " + tmp.toString() + "; " + itName + "++");
+				else code.append(" > " + tmp.toString() + "; " + itName + "--");
+				code.append(") {\n");
 				break;
 			case DO:
 				code.append("do {\n");
@@ -184,13 +204,13 @@ public class Parser {
 			case UNTIL:
 				code.append("} while (!(");
 				i++;
-				i = appendUntil(LINE, code, i);
+				i = appendUntil(code, i, LINE);
 				code.append("));");
 				break;
 			case WHILE:
 				code.append("while (");
 				i++;
-				i = appendUntil(EXECUTE, code, i);
+				i = appendUntil(code, i, EXECUTE);
 				code.append(") {\n");
 				break;
 			case END:
@@ -211,13 +231,18 @@ public class Parser {
 	 * @param i index to use
 	 * @return the updated index
 	 */
-	private int appendUntil(Token what, StringBuilder code, int i) {
-		while (tokens.get(i) != what) {
+	private int appendUntil(StringBuilder code, int i, Token... what) {
+		appendLoop:
+		while (true) {
+			//This loop serves as the condition
+			for (Token token : what) if (tokens.get(i) == token) break appendLoop;
 			if (tokens.get(i) == STRING || tokens.get(i) == NUMBER) code.append(metadata.get(i));
 			else if (tokens.get(i) == VARIABLE_NAME) {
 				if (isReferenced(metadata.get(i))) code.append(metadata.get(i));
 				else outputAndThrow(new RuntimeException("Error: Variable undefined.\n"));
 			}
+			else if (tokens.get(i) == LPAR) code.append("(");
+			else if (tokens.get(i) == RPAR) code.append(")");
 			else if (tokens.get(i) == PLUS) code.append("+");
 			else if (tokens.get(i) == MINUS) code.append("-");
 			else if (tokens.get(i) == MULTIPLY) code.append("*");
@@ -234,10 +259,9 @@ public class Parser {
 			else if (tokens.get(i) == LESS_THAN) code.append("<");
 			else if (tokens.get(i) == EQUALS) code.append("==");
 			else if (tokens.get(i) == NOT_EQUALS) code.append("!=");
-			else if (tokens.get(i) == LPAR) code.append("(");
-			else if (tokens.get(i) == RPAR) code.append(")");
 			else if (tokens.get(i) == LSQPAR) code.append("Number.parseInt(");
 			else if (tokens.get(i) == RSQPAR) code.append(")");
+			else if (tokens.get(i) == ASSIGNMENT) code.append("=");
 			else if (tokens.get(i).isOutputable()) code.append(tokens.get(i).getValue());
 			else break;
 			if (i+1 >= tokens.size()) break;
@@ -276,21 +300,21 @@ public class Parser {
 				//Skip whitespace & newlines
 				if (Character.isWhitespace(input.charAt(i))) continue;
 				
+				//Checks for multi-character identifiers
+				try {
+					if (input.substring(i, i + st.getValue().length()).equals(st.getValue())) {
+						tokens.add(st);
+						i += st.getValue().length()-1;
+						continue charLoop;
+					}
+				} catch(StringIndexOutOfBoundsException e) {}
+				//Ignore this exception because the identifiers might be larger than the input string.
+				
 				//Checks for mono-character identifiers
 				if (st.isOneChar() && input.charAt(i) == st.getValue().toCharArray()[0]) {
 					tokens.add(st);
 					continue charLoop;
 				}
-				
-				//Checks for multi-character identifiers
-				try{
-					if (input.substring(i, i + st.getValue().length()).equals(st.getValue())) {
-						tokens.add(st);
-						i += st.getValue().length()-1;
-						continue charLoop;
-					} else continue;
-				} catch(StringIndexOutOfBoundsException e) {continue;}
-				//Ignore this exception because the identifiers might be larger than the input string. 
 			}
 			
 			//Check if there is a string
@@ -300,8 +324,8 @@ public class Parser {
 				StringBuilder string = new StringBuilder();
 				while (input.charAt(i) != '"') {
 					string.append(input.charAt(i));
-					i++;
 					if (i >= input.length()) break;
+					i++;
 				}
 				string.insert(0, "\"");
 				string.append("\"");
