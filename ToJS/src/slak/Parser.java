@@ -193,7 +193,12 @@ public class Parser {
 				i++;
 				StringBuilder perItOp = new StringBuilder();
 				i = appendUntil(perItOp, i, EXECUTE);
-				int num = Integer.parseInt(perItOp.toString());
+				int num;
+				try {
+					num = Integer.parseInt(perItOp.toString());
+				} catch (NumberFormatException e) {
+					num = -1;
+				}
 				if (num >= 0) code.append(" <= " + tmp.toString() + "; " + itName + "++");
 				else code.append(" > " + tmp.toString() + "; " + itName + "--");
 				code.append(") {\n");
